@@ -4,16 +4,20 @@ from Classes import *
 pygame.init()
 pygame.font.init()
 
+#inables the player to scale the screen
 scale=1
 
+#chooses the font
 font=pygame.font.SysFont("Comic Sans MS",int(60*scale))
 
+#screen width/height
 SCREEN_WIDTH = 256*3*scale
 SCREEN_HEIGHT = 256*3*scale
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Escape Game")
 
+#makes the pygame.sprite.Group for HUD
 hud_group=pygame.sprite.Group()
 hud_1=HUD(0,630,140,140,scale)
 hud_2=HUD(150,630,140,140,scale)
@@ -26,10 +30,13 @@ hud_group.add(hud_3)
 hud_group.add(hud_4)
 hud_group.add(hud_5)
 
+#makes the pygame.sprite.Group for indicator
 indicator_group=pygame.sprite.Group()
 
+#makes the pygame.sprite.Group for item
 item_group=pygame.sprite.Group()
 
+#makes the pygame.sprite.Group for levels and adds the transitions
 level_group_1=pygame.sprite.Group()
 
 level_group_2=pygame.sprite.Group()
@@ -63,7 +70,8 @@ transition_8_9=Transitioner(9,pygame.Rect(250*scale,130*scale,150*scale,280*scal
 level_group_8.add(transition_8_9)
 
 level_group_9=pygame.sprite.Group()
-    
+
+#makes the pygame.sprite.Group for furniture
 furniture_group_1=pygame.sprite.Group()
 door_1_1=Furniture("Sprites/Door-1.1.png",650,150,100,350,1.2,SCREEN_WIDTH,SCREEN_HEIGHT,scale)
 closet_1_1=Furniture("Sprites/Closet-1.1.png",200,220,100,260,1.1,SCREEN_WIDTH,SCREEN_HEIGHT,scale)
@@ -111,6 +119,7 @@ furniture_group_9=pygame.sprite.Group()
 furniture_group=pygame.sprite.Group()
 level_group=pygame.sprite.Group()
 
+#compiles a level list in wich the current level is stored as True
 running=True
 level=list()
 level.append(True)
@@ -124,12 +133,14 @@ level.append(False)
 level.append(False)
 level.append(False)
 
-
+#Input for keypad/safe via keyboard
 keypad_input=""
 safe_input=""
 
+#actual Game loop
 while(running):
 
+    #looks for the current level 
     if level[0]:
         image=pygame.image.load("Sprites/Titel.png")
 
@@ -138,6 +149,7 @@ while(running):
         furniture_group=furniture_group_1
         level_group=level_group_1
 
+        #interactions with furniture
         for f in furniture_group:
             if f.index==1.2:
                 if f.opened:
@@ -161,6 +173,7 @@ while(running):
         furniture_group=furniture_group_3
         level_group=level_group_3
 
+        #compares keyboard input
         if keypad_input=="2594":
             for f in furniture_group_2:
                 if f.index==2.2:
@@ -175,7 +188,8 @@ while(running):
             for l in level_group_3:
                 l.transition(level)
                 break
-            
+
+        #reste keypad
         if len(keypad_input)>3:
             keypad_input=""
             
@@ -268,20 +282,24 @@ while(running):
             # print(level)
             # print(keypad_input)
 
+            #checks collisions for items
             for i in item_group:
                 if i.collider.collidepoint(pos):
                     i.collect(hud_group,item_group)
 
+            #checks collisions for furniture
             for f in furniture_group:
                 if f.collider.collidepoint(pos):
                     f.open(hud_group,item_group)  
 
+            #checks collisions for HUD
             for h in hud_group:
                 if h.collider.collidepoint(pos):
                     print(h.selected)
                     h.select(hud_group,indicator_group)
                     print(h.selected)  
 
+            ##checks collisions for levels
             for l in level_group:
                 if l.collider.collidepoint(pos):
                     l.transition(level) 
@@ -295,6 +313,7 @@ while(running):
 
         if level[3]:
 
+            #creats the keypad input
             if event.type == pygame.KEYDOWN:
                     
                 if event.key == pygame.K_0:
@@ -328,7 +347,8 @@ while(running):
                     keypad_input=keypad_input+"9"
 
         if level[7]:
-
+            
+            #creats the safe input
             if event.type == pygame.KEYDOWN:
                     
                 if event.key == pygame.K_0:
@@ -366,10 +386,12 @@ while(running):
     screen.blit(background,(1,1))
 
     if level[0]:
+        #Title 
         text=font.render("Press Space to start",True,(250,0,0))
         screen.blit(text,(100*scale,300*scale))
 
     if level[3]:
+        #user explanation
         text=font.render(keypad_input,True,(250,0,0))
         screen.blit(text,(200*scale,160*scale))
         text=font.render("Enter with Keyboard",True,(250,0,0))
