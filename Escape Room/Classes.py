@@ -1,7 +1,9 @@
 import pygame
-from pygame.sprite import *   
-    
+from pygame.sprite import *  
+
+#This class represents a Heads-Up Display (HUD) element
 class HUD(pygame.sprite.Sprite):
+    #Initializes the HUD
     def __init__(self,pos_x,pos_y,width,height,scale):
         super().__init__()
         self.scale=scale
@@ -14,6 +16,8 @@ class HUD(pygame.sprite.Sprite):
         self.pos_x=pos_x
         self.pos_y=pos_y
         
+    #Deselects all other HUD elements
+    #Creates an Indicator sprite at the same position
     def select(self,hud_group,indicator_group):
         for i in indicator_group:
             indicator_group.remove(i)
@@ -24,18 +28,22 @@ class HUD(pygame.sprite.Sprite):
         indicator_group.add(indicator)
         print(self.index)
 
+    #loads an image, scales it, and updates the HUD’s attributes
     def addItem(self,image,index):
         self.image=pygame.image.load(image).convert_alpha()
         self.image=pygame.transform.scale_by(self.image,self.scale)
         self.rect=self.image.get_rect()
         self.rect.center=[self.pos_x*self.scale+self.rect.width/2,self.pos_y*self.scale+self.rect.height/2]
         self.index=index
-    
+        
+    #resets the HUD’s image and index
     def removeItem(self):
         self.image=pygame.image.load("Sprites/Empty.png")
         self.rect=self.image.get_rect()
         self.index=0
+        
 
+#Indicates wich Item is selected
 class Indicator(pygame.sprite.Sprite):
     def __init__(self,pos_x,pos_y,scale):
         super().__init__()
@@ -46,6 +54,7 @@ class Indicator(pygame.sprite.Sprite):
         self.rect.center=[pos_x+self.rect.width/2,pos_y+self.rect.height/2]
 
 
+#provides the furniture for each room
 class Furniture(pygame.sprite.Sprite):
     def __init__(self,image,pos_x,pos_y,width,height,index,screen_widht,screen_height,scale):
         super().__init__()
@@ -137,6 +146,7 @@ class Furniture(pygame.sprite.Sprite):
                     break
         
 
+#defines all the Items
 class Item(pygame.sprite.Sprite):
     def __init__(self,collider,image,index,screen_widht,screen_height,scale):
         super().__init__()
@@ -171,6 +181,7 @@ class Item(pygame.sprite.Sprite):
                 break
         item_group.remove(self)
 
+#makes transitions between scenes "levels" possible
 class Transitioner(pygame.sprite.Sprite):
     def __init__(self,level_index,collider):
         super().__init__()
