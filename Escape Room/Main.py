@@ -248,7 +248,7 @@ while(running):
             for l in level_group_6:
                 if l.level_index==7:
                     level_group_6.remove(l)
-            item=Item(pygame.Rect(350,450,50,50),"Sprites/Key-5.1.png",5.1,SCREEN_WIDTH,SCREEN_HEIGHT,scale)
+            item=Item(pygame.Rect(350*scale,450*scale,50*scale,50*scale),"Sprites/Key-5.1.png",5.1,SCREEN_WIDTH,SCREEN_HEIGHT,scale)
             item_group.add(item)
 
             for l in level_group_7:
